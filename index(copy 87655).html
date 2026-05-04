@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+<title>·Cheetos Escripts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0c111d;
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+  }
+
+  /* TEMA PADRÃO (AZUL) */
+  body.theme-default {
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --bg-gradient-start: #0f172a;
+    --bg-gradient-end: #1e293b;
+    --card-bg: white;
+    --text-color: #1e293b;
+    --text-secondary: #475569;
+    --border-color: #eef2ff;
+  }
+
+  /* TEMA NATAL */
+  body.theme-natal {
+    --primary-color: #dc2626;
+    --primary-dark: #b91c1c;
+    --bg-gradient-start: #1a472a;
+    --bg-gradient-end: #2d5a3f;
+    --card-bg: #fff5f0;
+    --text-color: #2d1a0e;
+    --text-secondary: #8b4513;
+    --border-color: #ffd700;
+  }
+
+  /* TEMA ANO NOVO */
+  body.theme-ano-novo {
+    --primary-color: #fbbf24;
+    --primary-dark: #f59e0b;
+    --bg-gradient-start: #1a1a2e;
+    --bg-gradient-end: #16213e;
+    --card-bg: #fff9e6;
+    --text-color: #1e293b;
+    --text-secondary: #92400e;
+    --border-color: #fde047;
+  }
+
+  /* TEMA PÁSCOA */
+  body.theme-pascoa {
+    --primary-color: #e879f9;
+    --primary-dark: #d946ef;
+    --bg-gradient-start: #2d1b3d;
+    --bg-gradient-end: #3d2b4d;
+    --card-bg: #fdf4ff;
+    --text-color: #581c87;
+    --text-secondary: #a855f7;
+    --border-color: #f0abfc;
+  }
+
+  .app-container {
+    width: 100%;
+    height: 100vh;
+    background: #f4f7fc;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+  }
+
+  .screen.active {
+    display: flex;
+  }
+
+  .app-header {
+    background: white;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color, #eef2ff);
+    flex-shrink: 0;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .avatar-circle-dash {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(125deg, #eef2ff, #e0e7ff);
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-color, #1e293b);
+    cursor: pointer;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+
+  .clock-card {
+    background: linear-gradient(135deg, var(--bg-gradient-start, #0f172a), var(--bg-gradient-end, #1e293b));
+    border-radius: 32px;
+    padding: 24px 20px;
+    margin-bottom: 28px;
+    text-align: center;
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .clock-time {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: 'Inter', monospace;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #e2e8f0, #ffffff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+  }
+  
+  .clock-date {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  
+  .clock-greeting {
+    font-size: 0.7rem;
+    color: #67e8f9;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .search-bar {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    position: relative;
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 14px 18px 14px 48px;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 60px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    transition: all 0.2s;
+    outline: none;
+  }
+  
+  .search-input:focus {
+    border-color: var(--primary-color, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+  }
+  
+  .clear-search {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px;
+    display: none;
+    border-radius: 20px;
+  }
+  
+  .clear-search:hover {
+    color: #ef4444;
+  }
+  
+  .no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+    background: white;
+    border-radius: 28px;
+    font-weight: 500;
+  }
+
+  .row-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+
+  .link-action {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary-color, #2563eb);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .subjects-horizontal {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    margin-bottom: 28px;
+  }
+
+  .subject-pill {
+    flex-shrink: 0;
+    background: white;
+    width: 100px;
+    padding: 12px 8px;
+    border-radius: 28px;
+    text-align: center;
+    border: 1px solid var(--border-color, #eef2ff);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .subject-pill:active {
+    transform: scale(0.97);
+    background: #f8fafc;
+  }
+
+  .activity-card {
+    background: var(--card-bg, white);
+    border-radius: 24px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 5px solid var(--primary-color, #2563eb);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+  }
+  
+  .activity-card.clickable {
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s;
+  }
+  
+  .activity-card.clickable:active {
+    transform: scale(0.99);
+  }
+  
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 40px;
+  }
+  
+  .badge-warning { background: #fff3e3; color: #b45309; }
+  .badge-danger { background: #ffe9e9; color: #b91c1c; }
+  .badge-success { background: #e0f2fe; color: #0369a1; }
+  
+  .badge-online {
+    background: #22c55e20;
+    color: #16a34a;
+    border: 1px solid #22c55e40;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .badge-online::before {
+    content: "●";
+    font-size: 10px;
+    color: #22c55e;
+    animation: pulseGreen 1.2s infinite;
+  }
+  
+  .badge-maintenance {
+    background: #f59e0b20;
+    color: #d97706;
+    border: 1px solid #f59e0b40;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .badge-maintenance::before {
+    content: "⚠️";
+    font-size: 10px;
+  }
+  
+  @keyframes pulseGreen {
+    0% { opacity: 0.4; }
+    100% { opacity: 1; text-shadow: 0 0 2px #22c55e; }
+  }
+  
+  .platform-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-color, #0f172a);
+    letter-spacing: -0.2px;
+  }
+  
+  .platform-brand svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .platform-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .right-indicator {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: transform 0.1s;
+  }
+  
+  .activity-card:hover .right-indicator {
+    transform: translateX(3px);
+    color: var(--primary-color, #2563eb);
+  }
+
+  .link-url {
+    font-size: 0.65rem;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 40px;
+    color: var(--text-secondary, #475569);
+    margin-top: 12px;
+    display: inline-block;
+    word-break: break-all;
+  }
+
+  .semester-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .tab-sem {
+    background: white;
+    padding: 8px 22px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    border: 1px solid var(--border-color, #e2e8f0);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-sem:hover {
+    background: #f1f5f9;
+    transform: translateY(-2px);
+  }
+  
+  .tab-sem.active {
+    background: var(--primary-color, #2563eb);
+    color: white;
+    border-color: var(--primary-color, #2563eb);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+  
+  /* Botão de engrenagem */
+  .settings-gear {
+    background: white;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--border-color, #e2e8f0);
+    transition: all 0.2s ease;
+  }
+  
+  .settings-gear:hover {
+    transform: rotate(30deg);
+    background: var(--primary-color, #2563eb);
+    color: white;
+  }
+  
+  /* Modal de temas */
+  .theme-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 3500;
+  }
+  
+  .theme-modal.active {
+    display: flex;
+  }
+  
+  .theme-modal-content {
+    background: white;
+    border-radius: 32px;
+    padding: 28px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+  }
+  
+  .theme-modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--text-color, #1e293b);
+  }
+  
+  .theme-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .theme-btn {
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+  
+  .theme-btn-default {
+    background: #2563eb;
+    color: white;
+  }
+  
+  .theme-btn-natal {
+    background: #dc2626;
+    color: white;
+  }
+  
+  .theme-btn-ano-novo {
+    background: #fbbf24;
+    color: #1e293b;
+  }
+  
+  .theme-btn-pascoa {
+    background: #e879f9;
+    color: white;
+  }
+  
+  .theme-btn:hover {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+  
+  .close-theme-modal {
+    margin-top: 20px;
+    background: #f1f5f9;
+    border: none;
+    padding: 12px;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #64748b;
+  }
+
+  .bottom-nav {
+    background: white;
+    display: flex;
+    padding: 8px 16px 14px;
+    border-top: 1px solid var(--border-color, #eef2ff);
+    flex-shrink: 0;
+  }
+  
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 8px 0;
+    border-radius: 28px;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-item:hover {
+    background: #f1f5f9;
+  }
+  
+  .nav-item.active {
+    color: var(--primary-color, #2563eb);
+    background: #eef2ff;
+  }
+  
+  .password-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+  }
+  
+  .password-modal.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: white;
+    border-radius: 32px;
+    padding: 32px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+  }
+  
+  .modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--text-color, #1e293b);
+  }
+  
+  .modal-content input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid var(--border-color, #e2e8f0);
+    border-radius: 16px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .modal-content input:focus {
+    outline: none;
+    border-color: var(--primary-color, #2563eb);
+  }
+  
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .btn-confirm {
+    background: var(--primary-color, #2563eb);
+    color: white;
+  }
+  
+  .btn-cancel {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+  
+  .error-message {
+    color: #ef4444;
+    font-size: 0.8rem;
+    display: none;
+    margin-bottom: 15px;
+  }
+  
+  .admin-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0f172a;
+    z-index: 4000;
+    overflow-y: auto;
+    display: none;
+  }
+  
+  .admin-panel.active {
+    display: block;
+  }
+  
+  .admin-header {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .admin-content {
+    padding: 20px;
+  }
+  
+  .admin-card {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .close-admin {
+    background: #ef4444;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .firebase-stats {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    bottom: 70px;
+    right: 10px;
+    padding: 8px 14px;
+    border-radius: 40px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #10b981;
+    z-index: 1000;
+    pointer-events: none;
+    font-family: monospace;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+    letter-spacing: 0.3px;
+  }
+  
+  .notification-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+    max-width: 400px;
+    background: #1e293b;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 16px;
+    z-index: 2000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-left: 4px solid var(--primary-color, #3b82f6);
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  
+  .btn-remove {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
+  .btn-remove:hover {
+    background: #dc2626;
+  }
+  
+  .status-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-top: 10px;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .platform-status-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .info-card {
+    background: white;
+    border-radius: 36px;
+    width: 100%;
+    max-width: 380px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  
+  .info-card h4 {
+    color: var(--text-color, #1e293b);
+    margin-bottom: 15px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .info-divider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eef2ff;
+  }
+  
+  .info-divider:last-of-type {
+    border-bottom: none;
+  }
+  
+  .info-label {
+    font-weight: 500;
+    color: #64748b;
+  }
+  
+  .info-value {
+    font-weight: 600;
+    color: var(--text-color, #1e293b);
+  }
+  
+  .image-container {
+    margin-top: 15px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+  }
+  
+  .image-container + .image-container {
+    margin-top: 15px;
+  }
+  
+  .badge-id {
+    background: #eef2ff;
+    color: var(--primary-color, #2563eb);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .stats-banner-modern {
+    background: linear-gradient(135deg, var(--bg-gradient-start, #0f172a) 0%, var(--bg-gradient-end, #1e1b4b) 50%, var(--bg-gradient-start, #0f172a) 100%);
+    border-radius: 24px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .stats-banner-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  .stats-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .stats-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .stats-title span {
+    font-size: 1rem;
+  }
+  
+  .stats-title h4 {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #94a3b8;
+  }
+  
+  .online-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(34, 197, 94, 0.15);
+    padding: 4px 10px;
+    border-radius: 40px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #22c55e;
+  }
+  
+  .online-badge::before {
+    content: "●";
+    font-size: 8px;
+    animation: pulseGreen 1.2s infinite;
+  }
+  
+  .stats-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .stat-card {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 10px 8px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.07);
+  }
+  
+  .stat-icon {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+  
+  .stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  
+  .stat-label {
+    font-size: 0.6rem;
+    color: #94a3b8;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  
+  @media (max-width: 520px) {
+    .scroll-content { padding: 16px; }
+    .app-header { padding: 14px 20px; }
+    .clock-time { font-size: 2.2rem; }
+    .firebase-stats { bottom: 65px; font-size: 0.55rem; padding: 6px 10px; }
+    .stats-banner-modern { padding: 14px 16px; }
+    .stat-value { font-size: 1.1rem; }
+    .stat-icon { font-size: 1.1rem; }
+    .stat-card { padding: 8px 6px; }
+    .stats-grid { gap: 8px; }
+  }
+  
+  .copy-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 5000;
+    animation: fadeInUp 0.3s ease, fadeOut 0.3s ease 2s forwards;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    pointer-events: none;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+  
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  /* Estilos para cards dinâmicos no admin */
+  .add-card-form {
+    background: #f1f5f9;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .add-card-form input,
+  .add-card-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .btn-primary {
+    background: var(--primary-color, #2563eb);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .btn-primary:hover {
+    background: var(--primary-dark, #1d4ed8);
+  }
+  
+  .random-color {
+    width: 100%;
+    height: 40px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .card-list-item {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .card-list-item-info {
+    flex: 1;
+  }
+  
+  .card-list-item-info strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .card-list-item-info small {
+    color: #64748b;
+    font-size: 0.7rem;
+  }
+  
+  .card-list-item-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .btn-remove-card {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+  
+  .btn-remove-card:hover {
+    background: #dc2626;
+  }
+  
+  .dynamic-card-count {
+    background: #2563eb20;
+    color: var(--primary-color, #2563eb);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    margin-left: 8px;
+  }
+  
+  .dynamic-cards-section {
+    margin-top: 20px;
+  }
+  
+  .carteirinha-digital {
+    background: linear-gradient(135deg, #0b182c, #0f212f);
+    border-radius: 44px;
+    padding: 28px;
+    width: 100%;
+    max-width: 380px;
+    color: white;
+    margin-bottom: 20px;
+    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.4);
+  }
+  
+  .avatar-big {
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    border: 2px solid rgba(255,255,255,0.3);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .discord-link-card {
+    background: linear-gradient(135deg, #5865F2, #404EED);
+    border-radius: 44px;
+    padding: 20px;
+    width: 100%;
+    max-width: 380px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .discord-link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -10px rgba(88, 101, 242, 0.4);
+  }
+  
+  .discord-link-card:active {
+    transform: translateY(0);
+  }
+  
+  .discord-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .discord-icon {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+  
+  .discord-info {
+    flex: 1;
+  }
+  
+  .discord-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: white;
+  }
+  
+  .discord-members {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.8);
+  }
+  
+  .discord-join {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .discord-footer {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .discord-link-card-eclipse {
+    background: linear-gradient(135deg, #7289DA, #4B6E8A);
+    border-radius: 44px;
+    padding: 20px;
+    width: 100%;
+    max-width: 380px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .discord-link-card-eclipse:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -10px rgba(114, 137, 218, 0.4);
+  }
+  
+  .discord-link-card-eclipse:active {
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body class="theme-default">
+<div class="app-container">
+  
+  <!-- HOME (DASHBOARD) - TELA PRINCIPAL -->
+  <div id="homeScreen" class="screen active">
+    <div class="app-header">
+      <div class="header-row">
+        <div><h2 style="font-size:1.35rem;">Olá, <span id="dashboardName">Bem-vindo Ao Sistema De Escripts</span> 👋</h2><p style="font-size:0.7rem; color:#64748b;"> Em Desenvolvimento por egitao</p></div>
+        <div class="avatar-circle-dash" id="avatarDashBtn" style="background-image: url('https://i.ibb.co/k66gJmNY/Screenshot-20260503-144912-Chrome-1.jpg');"></div>
+      </div>
+    </div>
+    <div class="scroll-content">
+      
+      <div class="stats-banner-modern" id="statsBanner">
+        <div class="stats-header">
+          <div class="stats-title"><span>📊</span><h4>ESTATÍSTICAS EM TEMPO REAL</h4></div>
+          <div class="online-badge" id="onlineBadge">AO VIVO</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">👁️</div><div class="stat-value" id="visitCounter">Carregando...</div><div class="stat-label">Total de Visitas</div></div>
+          <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="onlineCounter">--</div><div class="stat-label">Usuários Online</div></div>
+          <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value" id="activePlatforms">14</div><div class="stat-label">Plataformas Ativas</div></div>
+        </div>
+      </div>
+      
+      <div class="row-flex"><h3>📚 Matérias em foco</h3><button class="link-action" onclick="showScreen('materiaisScreen')">Explorar →</button></div>
+      <div class="subjects-horizontal">
+        <div class="subject-pill" id="chatGptPill">🤖 ChatGPT</div>
+        <div class="subject-pill" id="geminiPill">✨ Gemini</div>
+        <div class="subject-pill" id="grokPill">🦍 GROK</div>
+        <div class="subject-pill" id="pokiPill">🎮 POKI</div>
+        <div class="subject-pill">🇧🇷 BRASIL</div>
+      </div>
+      
+      <div class="row-flex"><h3>📋 Plataformas & Acesso Rápido</h3><button class="link-action" onclick="showScreen('atividadesScreen')">Ver tudo →</button></div>
+      
+      <!-- CARDS FIXOS -->
+      <div id="taskitosSpecialCard" class="activity-card clickable" style="border-left-color: #10b981; margin-bottom: 16px;"><div class="platform-link" id="taskitosLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg><span style="font-weight:800;">Taskitos</span><span id="taskitosStatus" class="badge badge-online" style="margin-left:6px;">Online agora</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Central de Tarefas Gamificadas</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para acessar o ambiente interativo →</div><div class="link-url">🔗 taskitos.cupiditys.lol</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="eclipseLunarCard" class="activity-card clickable" style="border-left-color: #8b5cf6; margin-bottom: 16px;"><div class="platform-link" id="eclipseLunarLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M12 12l2 2M12 12l-2 2M12 12l2-2M12 12l-2-2" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h2M20 12h2" stroke="currentColor"/></svg><span style="font-weight:800;">Eclipse Lunar</span><span id="eclipseLunarStatus" class="badge badge-online" style="margin-left:6px;">Online · Conteúdo Noturno</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Eclipse Lunar - Hub de Conteúdos</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Acesse conteúdos exclusivos, jogos e materiais interativos →</div><div class="link-url">🌙 crimsonzerohub.xyz</div></div><div class="right-indicator">↗️</div></div></div>
+      
+      <div id="educacaoProfissionalCard" class="activity-card clickable" style="border-left-color: #8b5cf6; margin-bottom: 16px;"><div class="platform-link" id="educacaoLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/><path d="M5 10.5v4.5l7 3.5 7-3.5v-4.5"/></svg><span style="font-weight:800;">Educação Profissional</span><span id="educacaoStatus" class="badge badge-online" style="margin-left:6px;">Disponível 24h</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Cursos, Mentorias e Carreira</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Capacitação profissional com certificados →</div><div class="link-url">🔗 profissional.nejizzuki.xyz</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="matificCard" class="activity-card clickable" style="border-left-color: #f59e0b; margin-bottom: 16px;"><div class="platform-link" id="matificLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v3a4 4 0 0 0 8 0V3" stroke="currentColor" fill="none"/><path d="M12 12v7" stroke="currentColor"/><path d="M18 10c0 3.314-2.686 6-6 6s-6-2.686-6-6" stroke="currentColor" fill="none"/><circle cx="12" cy="9" r="2" fill="#f59e0b20" stroke="#f59e0b"/><path d="M4 21h16" stroke="currentColor"/></svg><span style="font-weight:800;">Matific</span><span id="matificStatus" class="badge badge-online" style="margin-left:6px;">Online · Matemática Viva</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Plataforma Adaptativa de Matemática</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Desafios, jogos e aprendizado personalizado →</div><div class="link-url">🔗 matific.cupiditys.lol/dashboard</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="openEnglishCard" class="activity-card clickable" style="border-left-color: #06b6d4; margin-bottom: 16px;"><div class="platform-link" id="openEnglishLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14M5 12h10M5 16h6" stroke="currentColor" stroke-linecap="round"/><circle cx="18" cy="16" r="3" stroke="currentColor" fill="none"/><path d="M21 19l-2-2" stroke="currentColor" stroke-linecap="round"/><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" fill="none"/></svg><span style="font-weight:800;">Open English</span><span id="openEnglishStatus" class="badge badge-online" style="margin-left:6px;">Online · Aulas ao vivo</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Curso de Inglês Imersivo</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Aulas 24/7 com professores nativos →</div><div class="link-url">🔗 oe.nejizzuki.xyz</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="leiaSpCard" class="activity-card clickable" style="border-left-color: #ec489a; margin-bottom: 16px;"><div class="platform-link" id="leiaSpLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" stroke="currentColor" fill="none"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" stroke="currentColor" fill="none"/></svg><span style="font-weight:800;">Leia SP</span><span id="leiaSpStatus" class="badge badge-online" style="margin-left:6px;">Online · Biblioteca Digital</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Leia SP - Acervo Digital</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Milhares de livros, revistas e conteúdos gratuitos →</div><div class="link-url">🔗 leiasp.cupiditys.lol</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="leiaDoEgitaoCard" class="activity-card clickable" style="border-left-color: #d4af37; margin-bottom: 16px;"><div class="platform-link" id="leiaDoEgitaoLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2" stroke="currentColor" stroke-linecap="round"/><path d="M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">LEIA DO EGITAO</span><span id="leiaDoEgitaoStatus" class="badge badge-online" style="margin-left:6px;">Online · Bookmarklet</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Leia do Egitao - Bookmarklet de Leitura</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o bookmarklet →</div><div class="link-url">📚 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+
+      <div id="expansaoNoturnaCard" class="activity-card clickable" style="border-left-color: #f97316; margin-bottom: 16px;"><div class="platform-link" id="expansaoNoturnaLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M12 12l2 2M12 12l-2 2M12 12l2-2M12 12l-2-2" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">Expansão Noturna</span><span id="expansaoNoturnaStatus" class="badge badge-online" style="margin-left:6px;">Online · Novo Conteúdo</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Expansão Noturna - Conteúdo Exclusivo</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Acesse materiais especiais e conteúdos noturnos →</div><div class="link-url">🌙 exp.sev3ntzz.fun</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="expansaoBookmarkletCard" class="activity-card clickable" style="border-left-color: #f59e0b; margin-bottom: 16px;"><div class="platform-link" id="expansaoBookmarkletLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="2" ry="2" stroke="currentColor" fill="none"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-linecap="round"/><line x1="8" y1="13" x2="12" y2="13" stroke="currentColor" stroke-linecap="round"/><line x1="4" y1="21" x2="20" y2="21" stroke="currentColor"/></svg><span style="font-weight:800;">EXPANSÃO BOOKMARKLET</span><span id="expansaoBookmarkletStatus" class="badge badge-online" style="margin-left:6px;">Online · Automação</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Expansão Bookmarklet - Automação Híbrida</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o bookmarklet de automação da Expansão →</div><div class="link-url">📋 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+
+      <div id="redacaoCard" class="activity-card clickable" style="border-left-color: #3b82f6; margin-bottom: 16px;"><div class="platform-link" id="redacaoLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M16 4v16" stroke="currentColor" stroke-linecap="round"/><path d="M18 2v20" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">REDAÇÃO</span><span id="redacaoStatus" class="badge badge-online" style="margin-left:6px;">Online · Correção Imediata</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Plataforma de Redação - Correção e Modelos</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Envie sua redação, receba correção e veja modelos nota 1000 →</div><div class="link-url">✍️ kazereda.nejizzuki.xyz</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="redacaoParanaCard" class="activity-card clickable" style="border-left-color: #eab308; margin-bottom: 16px;"><div class="platform-link" id="redacaoParanaLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" fill="none"/><circle cx="12" cy="12" r="3" fill="#eab30820" stroke="#eab308"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">REDAÇÃO PARANÁ</span><span id="redacaoParanaStatus" class="badge badge-online" style="margin-left:6px;">Online · Correção Oficial</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Redação Paraná - Plataforma de Correção</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Prepare-se para o vestibular com correções oficiais →</div><div class="link-url">✍️ paranaplataformas.crimsonzerohub.xyz</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="redacaoIaCard" class="activity-card clickable" style="border-left-color: #a855f7; margin-bottom: 16px;"><div class="platform-link" id="redacaoIalinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3v2M15 3v2M3 9h2M3 15h2M21 9h2M21 15h2M5 5l2 2M19 5l-2 2M5 19l2-2M19 19l-2-2" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" fill="none"/><path d="M12 16v4M8 20h8" stroke="currentColor" stroke-linecap="round"/></svg><span style="font-weight:800;">REDAÇÃO IA</span><span id="redacaoIaStatus" class="badge badge-online" style="margin-left:6px;">Online · IA Avançada</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Redação IA - Correção Inteligente</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Correção de redações com inteligência artificial →</div><div class="link-url">🤖 infinity-writer.vercel.app</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="redacaoBookmarkletCard" class="activity-card clickable" style="border-left-color: #ef4444; margin-bottom: 16px;"><div class="platform-link" id="redacaoBookmarkletLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="2" ry="2" stroke="currentColor" fill="none"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-linecap="round"/><line x1="8" y1="13" x2="12" y2="13" stroke="currentColor" stroke-linecap="round"/><line x1="4" y1="21" x2="20" y2="21" stroke="currentColor"/></svg><span style="font-weight:800;">REDAÇÃO BOOKMARKLET</span><span id="redacaoBookmarkletStatus" class="badge badge-online" style="margin-left:6px;">Online · Bookmarklet</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Bookmarklet - Remover Bloqueios</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o bookmarklet que remove bloqueios de cópia →</div><div class="link-url">📋 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+
+      <div id="khanAcademyCard" class="activity-card clickable" style="border-left-color: #14b8a6; margin-bottom: 16px;"><div class="platform-link" id="khanAcademyLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" fill="none"/><path d="M5 10.5v4.5l7 3.5 7-3.5v-4.5" stroke="currentColor" fill="none"/><circle cx="12" cy="12" r="2" fill="#14b8a620" stroke="#14b8a6"/></svg><span style="font-weight:800;">Khan Academy</span><span id="khanAcademyStatus" class="badge badge-online" style="margin-left:6px;">Online · Cursos Gratuitos</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Khan Academy - Plataforma de Aprendizado</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Milhares de aulas gratuitas de matemática, ciências e muito mais →</div><div class="link-url">📚 khan.cupiditys.lol</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="khanAcademyBookCard" class="activity-card clickable" style="border-left-color: #f59e0b; margin-bottom: 16px;"><div class="platform-link" id="khanAcademyBookLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16v12H4zM8 10h8M8 14h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M12 2v4M12 18v4" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#f59e0b20" stroke="#f59e0b"/></svg><span style="font-weight:800;">Khan Academy BOOK</span><span id="khanAcademyBookStatus" class="badge badge-online" style="margin-left:6px;">Online · Bookmarklet</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Bookmarklet - Script Book</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o código do bookmarklet →</div><div class="link-url">📖 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+
+      <div id="apostilasCard" class="activity-card clickable" style="border-left-color: #06b6d4; margin-bottom: 16px;"><div class="platform-link" id="apostilasLinkTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M16 4v16" stroke="currentColor" stroke-linecap="round"/><path d="M18 2v20" stroke="currentColor" stroke-width="1.5"/><path d="M2 2h2v20H2z" stroke="currentColor"/></svg><span style="font-weight:800;">APOSTILAS</span><span id="apostilasStatus" class="badge badge-online" style="margin-left:6px;">Online · Material de Apoio</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Apostilas - Material de Estudo</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Apostilas completas para seus estudos, materiais de apoio e muito mais →</div><div class="link-url">📖 apostilas.nejizzuki.xyz</div></div><div class="right-indicator">↗️</div></div></div>
+
+      <div id="adminPanelCard" class="activity-card clickable" style="border-left-color: #ef4444; margin-bottom: 16px;"><div class="platform-link" id="adminPanelTrigger"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="currentColor" fill="none"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg><span style="font-weight:800;">Painel Admin EGITÃO</span><span class="badge badge-danger" style="margin-left:6px;">Restrito</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Área Administrativa</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Gerenciamento do sistema e notificações →</div><div class="link-url">🔐 Acesso restrito - Senha necessária</div></div><div class="right-indicator">🔐</div></div></div>
+      
+      <!-- CARDS DINÂMICOS (APENAS NA HOME) -->
+      <div class="dynamic-cards-section" id="dynamicCardsContainer"></div>
+    </div>
+  </div>
+
+  <!-- MATERIAIS -->
+  <div id="materiaisScreen" class="screen">
+    <div class="app-header"><div><h2>📂 Biblioteca Escripts</h2><p>Conteúdos organizados por categoria</p></div></div>
+    <div class="scroll-content">
+      <div class="semester-tabs" id="semesterWrapper">
+        <div class="tab-sem active" data-sem="1">📖 LEIA SP</div>
+        <div class="tab-sem" data-sem="2">🌙 EXPANSÃO</div>
+        <div class="tab-sem" data-sem="3">✍️ REDACÃO</div>
+        <div class="tab-sem" data-sem="4">📚 KHAN ACADEMY</div>
+        <div class="tab-sem" data-sem="5">📕 APOSTILAS</div>
+        <div class="tab-sem" data-sem="6">⭐ GABARITOS</div>
+        <div class="tab-sem" data-sem="7">🎮 TASKITOS</div>
+        <div class="tab-sem" data-sem="8">🌑 ECLIPSE LUNAR</div>
+        <!-- Botão de engrenagem para configurações -->
+        <div class="settings-gear" id="settingsGearBtn" title="Configurações">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" fill="none"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div id="materialsDynamicContainer"></div>
+    </div>
+  </div>
+
+  <!-- ATIVIDADES -->
+  <div id="atividadesScreen" class="screen">
+    <div class="app-header"><div><h2>✅ Central de Tarefas</h2><p>Controle seu desempenho + Plataformas</p></div></div>
+    <div class="scroll-content">
+      <div class="clock-card">
+        <div class="clock-time" id="liveClockAtv">--:--:--</div>
+        <div class="clock-date" id="liveDateAtv">Carregando...</div>
+        <div class="clock-greeting" id="greetingAtv">✨ Acompanhe suas atividades abaixo</div>
+        <div class="search-bar"><span class="search-icon">🔍</span><input type="text" id="searchInput" class="search-input" placeholder="Pesquisar plataformas..." autocomplete="off"><button id="clearSearchBtn" class="clear-search">✕</button></div>
+      </div>
+      <div id="searchableItemsContainer"></div>
+      <!-- CARDS DINÂMICOS NAS ATIVIDADES -->
+      <div class="dynamic-cards-section" id="dynamicCardsAtividadesContainer"></div>
+    </div>
+  </div>
+
+  <!-- CARTEIRINHA DIGITAL -->
+  <div id="carteirinhaScreen" class="screen">
+    <div class="app-header"><div><h2>🎫 Carteirinha Digital</h2><p>Identificação oficial do dono</p></div></div>
+    <div class="scroll-content" style="align-items:center; display:flex; flex-direction:column;">
+      <div class="carteirinha-digital">
+        <div style="display:flex; justify-content:space-between;"><span style="font-weight:700;">DONO EGITÃO</span><span class="badge-id">ID DIGITAL</span></div>
+        <div style="display:flex; flex-direction:column; align-items:center;"><div class="avatar-big" id="cardAvatarId" style="background-image: url('https://i.ibb.co/k66gJmNY/Screenshot-20260503-144912-Chrome-1.jpg');"></div><div style="font-size:1.2rem; font-weight:800; margin-top:6px;" id="cardFullNameID">DONO EGITÃO</div><div style="font-size:0.7rem; opacity:0.75;" id="cardRaId">RA: ONLINE</div></div>
+        <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><span>📍 BRASIL</span><span style="font-weight:600;">💻🔐</span></div>
+        <div style="display:flex; justify-content:space-between; padding:10px 0;"><span>📡 Status</span><span style="color:#2dd4bf;">● ONLINE</span></div>
+      </div>
+      
+      <a href="https://discord.gg/platformdestroyer" target="_blank" class="discord-link-card">
+        <div class="discord-header"><div class="discord-icon">💬</div><div class="discord-info"><div class="discord-name">Platform Destroyer</div><div class="discord-members">👥 Comunidade Oficial</div></div><div class="discord-join">Entrar →</div></div>
+        <div class="discord-footer"><span>🔗 discord.gg/platformdestroyer</span><span>⚡ Clique para participar</span></div>
+      </a>
+
+      <a href="https://discord.gg/eclipselunar" target="_blank" class="discord-link-card-eclipse">
+        <div class="discord-header"><div class="discord-icon">🌙</div><div class="discord-info"><div class="discord-name">Eclipse Lunar</div><div class="discord-members">🌙 Comunidade Noturna</div></div><div class="discord-join">Entrar →</div></div>
+        <div class="discord-footer"><span>🔗 discord.gg/eclipselunar</span><span>🌙 Conteúdos exclusivos</span></div>
+      </a>
+      
+      <div class="info-card">
+        <h4>📌 Informações da Conta</h4>
+        <div class="info-divider"><span class="info-label">eclipselunar</span><span class="info-value">dono dos Escripts</span></div>
+        <div class="info-divider"><span class="info-label">platformdestroyer</span><span class="info-value">dono dos Escripts</span></div>
+        <div class="info-divider"><span class="info-label">💬 Discord:</span><span class="info-value" style="color:#5865F2;">@platformdestroyer @eclipselunar</span></div>
+        <div class="image-container"><img src="https://i.ibb.co/6RtztsNH/Screenshot-20260503-171102-Chrome-1.jpg" alt="Screenshot-20260503-171102-Chrome-1" border="0"></div>
+        <div class="image-container"><img src="https://i.ibb.co/VWxJN718/Screenshot-20260503-174448-Chrome-1.jpg" alt="Screenshot-20260503-174448-Chrome-1" border="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav" id="bottomNavBar">
+    <button class="nav-item active" data-target="homeScreen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg><span>Início</span></button>
+    <button class="nav-item" data-target="materiaisScreen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span>Material</span></button>
+    <button class="nav-item" data-target="atividadesScreen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Tarefas</span></button>
+    <button class="nav-item" data-target="carteirinhaScreen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>CAT ID</span></button>
+  </div>
+  
+  <!-- MODAL DE SENHA -->
+  <div id="passwordModal" class="password-modal">
+    <div class="modal-content"><h3>🔐 Acesso Restrito</h3><input type="password" id="adminPassword" placeholder="Digite a senha de acesso" autocomplete="off"><div id="errorMessage" class="error-message">Senha incorreta! Tente novamente.</div><div class="modal-buttons"><button class="btn-cancel" onclick="closePasswordModal()">Cancelar</button><button class="btn-confirm" onclick="verifyPassword()">Acessar</button></div></div>
+  </div>
+
+  <!-- MODAL DE TEMAS -->
+  <div id="themeModal" class="theme-modal">
+    <div class="theme-modal-content">
+      <h3>🎨 Escolha um Tema</h3>
+      <div class="theme-buttons">
+        <button class="theme-btn theme-btn-default" onclick="setTheme('default')">🌍 Padrão (Azul)</button>
+        <button class="theme-btn theme-btn-natal" onclick="setTheme('natal')">🎄 Natal (Vermelho)</button>
+        <button class="theme-btn theme-btn-ano-novo" onclick="setTheme('ano-novo')">🎆 Ano Novo (Dourado)</button>
+        <button class="theme-btn theme-btn-pascoa" onclick="setTheme('pascoa')">🐰 Páscoa (Roxo)</button>
+      </div>
+      <button class="close-theme-modal" onclick="closeThemeModal()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="admin-panel">
+    <div class="admin-header"><h2>🎛️ Painel Administrativo EGITÃO</h2><button class="close-admin" onclick="closeAdminPanel()">Fechar</button></div>
+    <div class="admin-content">
+      <div class="admin-card">
+        <h3>📦Personalizados Pelo Administrador <span class="dynamic-card-count" id="dynamicCardCountHeader">0/50</span></h3>
+        <div class="add-card-form">
+          <input type="text" id="newCardName" placeholder="Nome do Card (ex: Netflix, YouTube, Curso...)" maxlength="50">
+          <input type="url" id="newCardLink" placeholder="Link URL (ex: https://exemplo.com)">
+          <select id="newCardStatus">
+            <option value="online">🟢 Online</option>
+            <option value="maintenance">🔧 Em Manutenção</option>
+          </select>
+          <div class="random-color" id="cardColorPreview" style="background-color: #3b82f6;"></div>
+          <button class="btn-primary" onclick="createDynamicCard()">✨ Criar Card Personalizado</button>
+          <p style="font-size:0.7rem; margin-top:8px; color:#64748b; text-align:center;">Clique na cor acima para alterar</p>
+        </div>
+      </div>
+      
+      <div class="admin-card">
+        <h3>📋 Meus Cards Criados <span id="cardCountDisplay">(0/50)</span></h3>
+        <div id="cardsListAdmin"></div>
+      </div>
+      
+      <div class="admin-card"><h3>🔧 Gerenciar Status das Plataformas</h3>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Taskitos</strong><select id="taskitosStatusSelect" class="status-select" onchange="updatePlatformStatus('taskitos', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Eclipse Lunar</strong><select id="eclipseLunarStatusSelect" class="status-select" onchange="updatePlatformStatus('eclipseLunar', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Educação Profissional</strong><select id="educacaoStatusSelect" class="status-select" onchange="updatePlatformStatus('educacao', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Matific</strong><select id="matificStatusSelect" class="status-select" onchange="updatePlatformStatus('matific', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Open English</strong><select id="openEnglishStatusSelect" class="status-select" onchange="updatePlatformStatus('openEnglish', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Leia SP</strong><select id="leiaSpStatusSelect" class="status-select" onchange="updatePlatformStatus('leiaSp', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 LEIA DO EGITAO</strong><select id="leiaDoEgitaoStatusSelect" class="status-select" onchange="updatePlatformStatus('leiaDoEgitao', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Expansão Noturna</strong><select id="expansaoNoturnaStatusSelect" class="status-select" onchange="updatePlatformStatus('expansaoNoturna', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 EXPANSÃO BOOKMARKLET</strong><select id="expansaoBookmarkletStatusSelect" class="status-select" onchange="updatePlatformStatus('expansaoBookmarklet', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 REDAÇÃO</strong><select id="redacaoStatusSelect" class="status-select" onchange="updatePlatformStatus('redacao', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 REDAÇÃO PARANÁ</strong><select id="redacaoParanaStatusSelect" class="status-select" onchange="updatePlatformStatus('redacaoParana', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 REDAÇÃO IA</strong><select id="redacaoIaStatusSelect" class="status-select" onchange="updatePlatformStatus('redacaoIa', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 REDAÇÃO BOOKMARKLET</strong><select id="redacaoBookmarkletStatusSelect" class="status-select" onchange="updatePlatformStatus('redacaoBookmarklet', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Khan Academy</strong><select id="khanAcademyStatusSelect" class="status-select" onchange="updatePlatformStatus('khanAcademy', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 Khan Academy BOOK</strong><select id="khanAcademyBookStatusSelect" class="status-select" onchange="updatePlatformStatus('khanAcademyBook', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+        <div class="platform-status-card"><div style="display:flex; justify-content:space-between;"><strong>📌 APOSTILAS</strong><select id="apostilasStatusSelect" class="status-select" onchange="updatePlatformStatus('apostilas', this.value)"><option value="online">🟢 Online</option><option value="maintenance">🔧 Em Manutenção</option></select></div></div>
+      </div>
+      <div class="admin-card"><h3>📢 Enviar Notificação Global</h3><textarea id="notificationMessage" rows="3" style="width:100%; padding:12px; border-radius:12px; border:1px solid #e2e8f0; margin:12px 0;" placeholder="Digite a mensagem..."></textarea><button onclick="sendGlobalNotification()" style="background:#2563eb; color:white; border:none; padding:12px 24px; border-radius:12px; cursor:pointer; font-weight:600;">📨 Enviar</button></div>
+      <div class="admin-card"><h3>🗑️ Remover Notificação</h3><button onclick="removeNotification()" class="btn-remove">🗑️ Remover</button></div>
+      <div class="admin-card"><h3>📊 Estatísticas</h3><div id="adminStats"><p>🔄 Carregando...</p></div></div>
+      <div class="admin-card"><h3>👥 Usuários Online</h3><div id="adminUsersOnline"><p>🔄 Carregando...</p></div></div>
+    </div>
+  </div>
+
+  <div class="firebase-stats" id="firebaseStats">🔥 App Exclusivo · </div>
+</div>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getFirestore, doc, runTransaction, onSnapshot, setDoc, serverTimestamp, getDoc, collection, query, where, deleteDoc, getDocs } from "firebase/firestore";
+
+  const firebaseConfig = { apiKey: "AIzaSyBRU1COppsLe_QJmmRmFRASW-w_5pdUMSw", authDomain: "teste-f56fb.firebaseapp.com", projectId: "teste-f56fb" };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const contadorRef = doc(db, "visitas", "contadorGlobal");
+  const notificacaoRef = doc(db, "notificacoes", "global");
+  const onlinePresenceCollection = collection(db, "onlinePresence");
+  const plataformasStatusRef = doc(db, "configuracoes", "plataformasStatus");
+  const dynamicCardsCollection = collection(db, "dynamicCards");
+  const defaultStatus = { taskitos: 'online', eclipseLunar: 'online', educacao: 'online', matific: 'online', openEnglish: 'online', leiaSp: 'online', leiaDoEgitao: 'online', expansaoNoturna: 'online', expansaoBookmarklet: 'online', redacao: 'online', redacaoParana: 'online', redacaoIa: 'online', redacaoBookmarklet: 'online', khanAcademy: 'online', khanAcademyBook: 'online', apostilas: 'online' };
+
+  let currentStatusData = { ...defaultStatus };
+  let dynamicCards = [];
+
+  const colorPalette = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec489a", "#06b6d4", "#f97316", "#14b8a6", "#a855f7", "#eab308", "#d946ef", "#2dd4bf", "#f43f5e", "#0ea5e9"];
+  function randomColor() { return colorPalette[Math.floor(Math.random() * colorPalette.length)]; }
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
+
+  // Função para abrir bookmarklet com verificação de manutenção
+  window.openBookmarkletWithStatus = function(statusKey, bookmarkletCode) {
+    if (currentStatusData[statusKey] === 'maintenance') {
+      alert('🔧 Este bookmarklet está em manutenção! Tente novamente mais tarde.');
+      return false;
+    }
+    copyToClipboard(bookmarkletCode, '📋 Código copiado! Cole nos favoritos do navegador.');
+    return true;
+  };
+
+  // Função para criar card HTML dinâmico
+  function createDynamicCardHTML(card) {
+    const statusClass = card.status === 'online' ? 'badge-online' : 'badge-maintenance';
+    const statusText = card.status === 'online' ? 'Online' : 'Em Manutenção';
+    const borderColor = card.color || randomColor();
+    const shortLink = card.link.length > 50 ? card.link.substring(0, 47) + '...' : card.link;
+    
+    return `
+      <div class="activity-card clickable" data-card-id="${card.id}" data-card-name="${escapeHtml(card.name).toLowerCase()}" data-card-link="${escapeHtml(card.link).toLowerCase()}" style="border-left-color: ${borderColor}; cursor: pointer; margin-bottom: 12px;" onclick="openDynamicCardLink('${card.id}', '${escapeHtml(card.link).replace(/'/g, "\\'")}')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="flex:1">
+            <div class="platform-brand">
+              <span style="font-weight:800;">${escapeHtml(card.name)}</span>
+              <span class="badge ${statusClass}" style="margin-left:6px;">${statusText}</span>
+            </div>
+            <div style="margin-top:8px; font-size:0.75rem; color:var(--text-secondary, #475569);">Clique para acessar</div>
+            <div class="link-url">🔗 ${shortLink}</div>
+          </div>
+          <div class="right-indicator">↗️</div>
+        </div>
+      </div>
+    `;
+  }
+
+  window.openDynamicCardLink = function(cardId, url) {
+    const card = dynamicCards.find(c => c.id === cardId);
+    if (!card) { window.open(url, "_blank"); return; }
+    if (card.status === 'maintenance') { alert('🔧 Este card está em manutenção! Tente novamente mais tarde.'); return; }
+    window.open(url, "_blank");
+  };
+
+  // Renderizar cards dinâmicos na HOME e ATIVIDADES
+  function renderDynamicCards() {
+    const homeContainer = document.getElementById('dynamicCardsContainer');
+    const atividadesContainer = document.getElementById('dynamicCardsAtividadesContainer');
+    const cardCountHeader = document.getElementById('dynamicCardCountHeader');
+    const countDisplay = document.getElementById('cardCountDisplay');
+    
+    if (cardCountHeader) cardCountHeader.innerText = `${dynamicCards.length}/50`;
+    if (countDisplay) countDisplay.innerText = `(${dynamicCards.length}/50)`;
+    
+    const cardsHTML = dynamicCards.map(c => createDynamicCardHTML(c)).join('');
+    const emptyMessage = '<div style="background:#f1f5f9; border-radius:24px; padding:30px; text-align:center; color:#64748b; margin-top:20px;">📭 Nenhum card personalizado criado ainda.<br>Acesse o painel admin para criar seus cards!</div>';
+    
+    if (homeContainer) {
+      if (dynamicCards.length === 0) {
+        homeContainer.innerHTML = emptyMessage;
+      } else {
+        homeContainer.innerHTML = '<div class="row-flex" style="margin-top:20px;"><h3>🎨 Personalizado Pelo Administrador</h3></div>' + cardsHTML;
+      }
+    }
+    
+    if (atividadesContainer) {
+      if (dynamicCards.length === 0) {
+        atividadesContainer.innerHTML = '';
+      } else {
+        atividadesContainer.innerHTML = '<div class="row-flex" style="margin-top:20px;"><h3>🎨 Personalizados Pelo Administrador</h3></div>' + cardsHTML;
+      }
+    }
+  }
+
+  // Admin: listar cards
+  function renderAdminCardsList() {
+    const container = document.getElementById('cardsListAdmin');
+    if (!container) return;
+    if (dynamicCards.length === 0) {
+      container.innerHTML = '<p style="color:#64748b; text-align:center; padding:20px;">Nenhum card criado. Use o formulário acima!</p>';
+      return;
+    }
+    container.innerHTML = dynamicCards.map(card => `
+      <div class="card-list-item">
+        <div class="card-list-item-info">
+          <strong>${escapeHtml(card.name)}</strong>
+          <small>${card.link.substring(0, 60)}${card.link.length > 60 ? '...' : ''}</small>
+        </div>
+        <div class="card-list-item-actions">
+          <select class="status-select" onchange="updateCardStatus('${card.id}', this.value)">
+            <option value="online" ${card.status === 'online' ? 'selected' : ''}>🟢 Online</option>
+            <option value="maintenance" ${card.status === 'maintenance' ? 'selected' : ''}>🔧 Manutenção</option>
+          </select>
+          <button class="btn-remove-card" onclick="deleteDynamicCard('${card.id}')">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // CRUD cards dinâmicos
+  window.createDynamicCard = async function() {
+    if (dynamicCards.length >= 50) { alert('❌ Limite máximo de 50 cards atingido!'); return; }
+    const name = document.getElementById('newCardName').value.trim();
+    let link = document.getElementById('newCardLink').value.trim();
+    const status = document.getElementById('newCardStatus').value;
+    const color = document.getElementById('cardColorPreview').style.backgroundColor;
+    
+    if (!name) { alert('⚠️ Digite o nome do card'); return; }
+    if (!link) { alert('⚠️ Digite o link URL'); return; }
+    if (!link.startsWith('http://') && !link.startsWith('https://')) { link = 'https://' + link; }
+    
+    const newId = Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+    await setDoc(doc(db, "dynamicCards", newId), { name, link, status, color, createdAt: serverTimestamp() });
+    
+    document.getElementById('newCardName').value = '';
+    document.getElementById('newCardLink').value = '';
+    document.getElementById('newCardStatus').value = 'online';
+    showToast('✅ Card criado com sucesso!');
+  };
+
+  window.deleteDynamicCard = async function(id) {
+    if (confirm('⚠️ Tem certeza que deseja remover este card?')) {
+      await deleteDoc(doc(db, "dynamicCards", id));
+      showToast('🗑️ Card removido!');
+    }
+  };
+
+  window.updateCardStatus = async function(id, newStatus) {
+    await setDoc(doc(db, "dynamicCards", id), { status: newStatus }, { merge: true });
+    showToast('✅ Status atualizado!');
+  };
+
+  function monitorDynamicCards() {
+    onSnapshot(dynamicCardsCollection, (snapshot) => {
+      dynamicCards = [];
+      snapshot.forEach(docSnap => { dynamicCards.push({ id: docSnap.id, ...docSnap.data() }); });
+      dynamicCards.sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+      renderDynamicCards();
+      renderAdminCardsList();
+    });
+  }
+
+  function showToast(message) {
+    const existingToast = document.querySelector('.copy-toast');
+    if (existingToast) existingToast.remove();
+    const toast = document.createElement('div');
+    toast.className = 'copy-toast';
+    toast.innerHTML = message;
+    document.body.appendChild(toast);
+    setTimeout(() => { if(toast.parentNode) toast.remove(); }, 2500);
+  }
+
+  function copyToClipboard(text, successMsg) {
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.createElement('div');
+      toast.className = 'copy-toast';
+      toast.innerHTML = successMsg;
+      document.body.appendChild(toast);
+      setTimeout(() => { if(toast.parentNode) toast.remove(); }, 2500);
+    }).catch(() => alert('❌ Erro ao copiar.'));
+  }
+
+  // Funções existentes
+  window.updatePlatformStatus = async function(platform, status) {
+    try { const snap = await getDoc(plataformasStatusRef); let currentStatus = snap.exists() ? snap.data() : defaultStatus; currentStatus[platform] = status; await setDoc(plataformasStatusRef, currentStatus); } catch(e) { console.error(e); }
+  }
+
+  const bookmarkletRedacao = "javascript:function remove_block(){const e=function(e){return e.stopImmediatePropagation(),!0};document.addEventListener(\"copy\",e,!0),document.addEventListener(\"cut\",e,!0),document.addEventListener(\"paste\",e,!0),alert(\"Block Removed!\")}remove_block();";
+  const bookmarkletKhan = "javascript:(async()=>{let r=await fetch(\"https://api.moonscripts.cloud/book\");let t=await r.text();let s=document.createElement(\"script\");s.textContent=t;document.body.appendChild(s);})();";
+  const bookmarkletLeia = "javascript:(function(){if(window.__AL2)return;window.__AL2=1;let d=document,p=d.createElement('div');p.id='A';p.style.cssText='position:fixed;top:16px;right:16px;background:rgba(20,20,35,0.9);border-radius:20px;z-index:9999;width:300px';p.innerHTML='<div style=\"padding:12px\"><div style=\"display:flex;justify-content:space-between\"><span style=\"font-weight:bold;color:#fff\">Leia SP</span></div></div>';d.body.appendChild(p);alert('Bookmarklet carregado!');})();";
+  const bookmarkletExpansao = "javascript:(function(){alert('Expansão Bookmarklet carregado!');})();";
+
+  function openLink(url, statusKey) {
+    if(currentStatusData[statusKey] === 'maintenance') { alert('🔧 Plataforma em manutenção!'); return; }
+    window.open(url, "_blank");
+  }
+  
+  function openChatGPTLink() { window.open("https://www.chatgpt.com", "_blank"); }
+  function openGeminiLink() { window.open("https://gemini.google.com/app?hl=pt-BR", "_blank"); }
+  function openGrokLink() { window.open("https://grok.com/", "_blank"); }
+  function openPokiLink() { window.open("https://poki.com/br/online", "_blank"); }
+  function openTaskitosLink(e) { if(e) e.stopPropagation(); openLink("https://taskitos.cupiditys.lol/", "taskitos"); }
+  function openEclipseLunarLink(e) { if(e) e.stopPropagation(); openLink("https://crimsonzerohub.xyz/", "eclipseLunar"); }
+  function openEducacaoLink(e) { if(e) e.stopPropagation(); openLink("https://profissional.nejizzuki.xyz/", "educacao"); }
+  function openMatificLink(e) { if(e) e.stopPropagation(); openLink("https://matific.cupiditys.lol/dashboard", "matific"); }
+  function openOpenEnglishLink(e) { if(e) e.stopPropagation(); openLink("https://oe.nejizzuki.xyz/", "openEnglish"); }
+  function openLeiaSpLink(e) { if(e) e.stopPropagation(); openLink("https://leiasp.cupiditys.lol/", "leiaSp"); }
+  
+  function openLeiaDoEgitaoLink(e) { if(e) e.stopPropagation(); openBookmarkletWithStatus('leiaDoEgitao', bookmarkletLeia); }
+  function openExpansaoBookmarkletLink(e) { if(e) e.stopPropagation(); openBookmarkletWithStatus('expansaoBookmarklet', bookmarkletExpansao); }
+  function openRedacaoBookmarkletLink(e) { if(e) e.stopPropagation(); openBookmarkletWithStatus('redacaoBookmarklet', bookmarkletRedacao); }
+  function openKhanAcademyBookLink(e) { if(e) e.stopPropagation(); openBookmarkletWithStatus('khanAcademyBook', bookmarkletKhan); }
+  
+  function openExpansaoNoturnaLink(e) { if(e) e.stopPropagation(); openLink("https://exp.sev3ntzz.fun/", "expansaoNoturna"); }
+  function openRedacaoLink(e) { if(e) e.stopPropagation(); openLink("https://kazereda.nejizzuki.xyz/", "redacao"); }
+  function openRedacaoParanaLink(e) { if(e) e.stopPropagation(); openLink("https://paranaplataformas.crimsonzerohub.xyz/redacao", "redacaoParana"); }
+  function openRedacaoIaLink(e) { if(e) e.stopPropagation(); openLink("https://infinity-writer.vercel.app/", "redacaoIa"); }
+  function openKhanAcademyLink(e) { if(e) e.stopPropagation(); openLink("https://khan.cupiditys.lol/pt-br/", "khanAcademy"); }
+  function openApostilasLink(e) { if(e) e.stopPropagation(); openLink("https://apostilas.nejizzuki.xyz/", "apostilas"); }
+
+  // Função que atualiza OS CARDS DO MATERIAL em tempo real
+  function applyStatusToMaterialCards(statusData) {
+    const materialCards = [
+      { id: 'leiaSpMaterialStatus', key: 'leiaSp', online: '🟢 Online · Biblioteca Digital', offline: '🔧 Em Manutenção' },
+      { id: 'leiaDoEgitaoMaterialStatus', key: 'leiaDoEgitao', online: '🟢 Online · Bookmarklet', offline: '🔧 Em Manutenção' },
+      { id: 'expansaoNoturnaMaterialStatus', key: 'expansaoNoturna', online: '🟢 Online · Conteúdo Exclusivo', offline: '🔧 Em Manutenção' },
+      { id: 'expansaoBookmarkletMaterialStatus', key: 'expansaoBookmarklet', online: '🟢 Online · Automação', offline: '🔧 Em Manutenção' },
+      { id: 'redacaoMaterialStatus', key: 'redacao', online: '🟢 Online · Correção Imediata', offline: '🔧 Em Manutenção' },
+      { id: 'redacaoParanaMaterialStatus', key: 'redacaoParana', online: '🟢 Online · Correção Oficial', offline: '🔧 Em Manutenção' },
+      { id: 'redacaoIaMaterialStatus', key: 'redacaoIa', online: '🟢 Online · IA Avançada', offline: '🔧 Em Manutenção' },
+      { id: 'redacaoBookmarkletMaterialStatus', key: 'redacaoBookmarklet', online: '🟢 Online · Bookmarklet', offline: '🔧 Em Manutenção' },
+      { id: 'khanAcademyMaterialStatus', key: 'khanAcademy', online: '🟢 Online · Cursos Gratuitos', offline: '🔧 Em Manutenção' },
+      { id: 'khanAcademyBookMaterialStatus', key: 'khanAcademyBook', online: '🟢 Online · Bookmarklet', offline: '🔧 Em Manutenção' },
+      { id: 'apostilasMaterialStatus', key: 'apostilas', online: '🟢 Online · Material de Apoio', offline: '🔧 Em Manutenção' },
+      { id: 'taskitosMaterialStatus', key: 'taskitos', online: '🟢 Online · Gamificação', offline: '🔧 Em Manutenção' },
+      { id: 'eclipseLunarMaterialStatus', key: 'eclipseLunar', online: '🟢 Online · Conteúdo Noturno', offline: '🔧 Em Manutenção' }
+    ];
+    
+    for (const card of materialCards) {
+      const element = document.getElementById(card.id);
+      if (element) {
+        if (statusData[card.key] === 'online') {
+          element.className = 'badge badge-online';
+          element.innerHTML = card.online;
+        } else {
+          element.className = 'badge badge-maintenance';
+          element.innerHTML = card.offline;
+        }
+      }
+    }
+  }
+
+  function applyStatusToUI(statusData) {
+    currentStatusData = statusData;
+    
+    const elements = [
+      {id:'taskitosStatus', key:'taskitos', online:'🟢 Online agora', offline:'🔧 Em Manutenção'},
+      {id:'taskitosStatus2', key:'taskitos', online:'🟢 Online agora', offline:'🔧 Em Manutenção'},
+      {id:'eclipseLunarStatus', key:'eclipseLunar', online:'🟢 Online · Conteúdo Noturno', offline:'🔧 Em Manutenção'},
+      {id:'eclipseLunarStatus2', key:'eclipseLunar', online:'🟢 Online · Conteúdo Noturno', offline:'🔧 Em Manutenção'},
+      {id:'educacaoStatus', key:'educacao', online:'🟢 Disponível 24h', offline:'🔧 Em Manutenção'},
+      {id:'educacaoStatus2', key:'educacao', online:'🟢 Disponível 24h', offline:'🔧 Em Manutenção'},
+      {id:'matificStatus', key:'matific', online:'🟢 Online · Matemática Viva', offline:'🔧 Em Manutenção'},
+      {id:'matificStatus2', key:'matific', online:'🟢 Online · Matemática Viva', offline:'🔧 Em Manutenção'},
+      {id:'openEnglishStatus', key:'openEnglish', online:'🟢 Online · Aulas ao vivo', offline:'🔧 Em Manutenção'},
+      {id:'openEnglishStatus2', key:'openEnglish', online:'🟢 Online · Aulas ao vivo', offline:'🔧 Em Manutenção'},
+      {id:'leiaSpStatus', key:'leiaSp', online:'🟢 Online · Biblioteca Digital', offline:'🔧 Em Manutenção'},
+      {id:'leiaSpStatus2', key:'leiaSp', online:'🟢 Online · Biblioteca Digital', offline:'🔧 Em Manutenção'},
+      {id:'leiaDoEgitaoStatus', key:'leiaDoEgitao', online:'🟢 Online · Bookmarklet', offline:'🔧 Em Manutenção'},
+      {id:'leiaDoEgitaoStatus2', key:'leiaDoEgitao', online:'🟢 Online · Bookmarklet', offline:'🔧 Em Manutenção'},
+      {id:'expansaoNoturnaStatus', key:'expansaoNoturna', online:'🟢 Online · Conteúdo Exclusivo', offline:'🔧 Em Manutenção'},
+      {id:'expansaoNoturnaStatus2', key:'expansaoNoturna', online:'🟢 Online · Conteúdo Exclusivo', offline:'🔧 Em Manutenção'},
+      {id:'expansaoBookmarkletStatus', key:'expansaoBookmarklet', online:'🟢 Online · Automação', offline:'🔧 Em Manutenção'},
+      {id:'expansaoBookmarkletStatus2', key:'expansaoBookmarklet', online:'🟢 Online · Automação', offline:'🔧 Em Manutenção'},
+      {id:'redacaoStatus', key:'redacao', online:'🟢 Online · Correção Imediata', offline:'🔧 Em Manutenção'},
+      {id:'redacaoStatus2', key:'redacao', online:'🟢 Online · Correção Imediata', offline:'🔧 Em Manutenção'},
+      {id:'redacaoParanaStatus', key:'redacaoParana', online:'🟢 Online · Correção Oficial', offline:'🔧 Em Manutenção'},
+      {id:'redacaoParanaStatus2', key:'redacaoParana', online:'🟢 Online · Correção Oficial', offline:'🔧 Em Manutenção'},
+      {id:'redacaoIaStatus', key:'redacaoIa', online:'🟢 Online · IA Avançada', offline:'🔧 Em Manutenção'},
+      {id:'redacaoIaStatus2', key:'redacaoIa', online:'🟢 Online · IA Avançada', offline:'🔧 Em Manutenção'},
+      {id:'redacaoBookmarkletStatus', key:'redacaoBookmarklet', online:'🟢 Online · Bookmarklet', offline:'🔧 Em Manutenção'},
+      {id:'redacaoBookmarkletStatus2', key:'redacaoBookmarklet', online:'🟢 Online · Bookmarklet', offline:'🔧 Em Manutenção'},
+      {id:'khanAcademyStatus', key:'khanAcademy', online:'🟢 Online · Cursos Gratuitos', offline:'🔧 Em Manutenção'},
+      {id:'khanAcademyStatus2', key:'khanAcademy', online:'🟢 Online · Cursos Gratuitos', offline:'🔧 Em Manutenção'},
+      {id:'khanAcademyBookStatus', key:'khanAcademyBook', online:'🟢 Online · Bookmarklet', offline:'🔧 Em Manutenção'},
+      {id:'khanAcademyBookStatus2', key:'khanAcademyBook', online:'🟢 Online · Bookmarklet', offline:'🔧 Em Manutenção'},
+      {id:'apostilasStatus', key:'apostilas', online:'🟢 Online · Material de Apoio', offline:'🔧 Em Manutenção'},
+      {id:'apostilasStatus2', key:'apostilas', online:'🟢 Online · Material de Apoio', offline:'🔧 Em Manutenção'}
+    ];
+    
+    for (const el of elements) {
+      const element = document.getElementById(el.id);
+      if(element) {
+        if(statusData[el.key] === 'online') {
+          element.className = 'badge badge-online';
+          element.innerHTML = el.online;
+        } else {
+          element.className = 'badge badge-maintenance';
+          element.innerHTML = el.offline;
+        }
+      }
+    }
+    
+    applyStatusToMaterialCards(statusData);
+    
+    const selects = ['taskitosStatusSelect', 'eclipseLunarStatusSelect', 'educacaoStatusSelect', 'matificStatusSelect', 'openEnglishStatusSelect', 'leiaSpStatusSelect', 'leiaDoEgitaoStatusSelect', 'expansaoNoturnaStatusSelect', 'expansaoBookmarkletStatusSelect', 'redacaoStatusSelect', 'redacaoParanaStatusSelect', 'redacaoIaStatusSelect', 'redacaoBookmarkletStatusSelect', 'khanAcademyStatusSelect', 'khanAcademyBookStatusSelect', 'apostilasStatusSelect'];
+    const keys = ['taskitos', 'eclipseLunar', 'educacao', 'matific', 'openEnglish', 'leiaSp', 'leiaDoEgitao', 'expansaoNoturna', 'expansaoBookmarklet', 'redacao', 'redacaoParana', 'redacaoIa', 'redacaoBookmarklet', 'khanAcademy', 'khanAcademyBook', 'apostilas'];
+    for(let i=0;i<selects.length;i++) {
+      const sel = document.getElementById(selects[i]);
+      if(sel) sel.value = statusData[keys[i]];
+    }
+  }
+  
+  function monitorarPlataformasStatus() { onSnapshot(plataformasStatusRef, (snap) => { applyStatusToUI(snap.exists() ? snap.data() : defaultStatus); }); }
+
+  async function incrementarVisitas() { if(!sessionStorage.getItem('firebase_visit_registered')) { try { await runTransaction(db, async (transaction) => { const snap = await transaction.get(contadorRef); transaction.set(contadorRef, { total: (snap.exists() ? snap.data().total : 0) + 1 }); }); sessionStorage.setItem('firebase_visit_registered', 'true'); } catch(e) { console.warn(e); } } }
+  function monitorarVisitas() { onSnapshot(contadorRef, (snap) => { if(snap.exists()) { const total = snap.data().total; const visitElem = document.getElementById('visitCounter'); if(visitElem) visitElem.innerText = total; } }); }
+
+  const sessionId = localStorage.getItem('onlineSessionId') || (Date.now() + '-' + Math.random().toString(36).substring(2,8));
+  localStorage.setItem('onlineSessionId', sessionId);
+  const myPresenceRef = doc(db, "onlinePresence", sessionId);
+  async function updatePresence() { try { await setDoc(myPresenceRef, { sessionId, lastSeen: serverTimestamp(), userAgent: navigator.userAgent.substring(0,100) }, { merge: true }); } catch(e) { console.warn(e); } }
+  let presenceInterval = setInterval(updatePresence, 20000); updatePresence();
+  window.addEventListener('beforeunload', async () => { clearInterval(presenceInterval); try { await deleteDoc(myPresenceRef); } catch(e) {} });
+
+  function monitorarUsuariosOnline() { const cutoff = new Date(Date.now() - 40000); const q = query(onlinePresenceCollection, where("lastSeen", ">", cutoff)); onSnapshot(q, (snapshot) => { const onlineCount = snapshot.size; const onlineElem = document.getElementById('onlineCounter'); if(onlineElem) onlineElem.innerText = onlineCount; const adminUsersPanel = document.getElementById('adminUsersOnline'); if(adminUsersPanel && document.getElementById('adminPanel').classList.contains('active')) { const users = []; snapshot.forEach(doc => { users.push(`🟢 ${doc.data().sessionId.substring(0,12)}...`); }); adminUsersPanel.innerHTML = users.length ? users.join('<br>') : '<p>Nenhum usuário online</p>'; } }); }
+
+  function monitorarNotificacoes() { let ultimoTimestamp = 0; onSnapshot(notificacaoRef, (snap) => { if(snap.exists()) { const data = snap.data(); const mensagem = data.mensagem; const timestamp = data.timestamp?.toMillis?.() || data.timestamp || 0; if(mensagem && mensagem.trim() !== "" && timestamp > ultimoTimestamp) { ultimoTimestamp = timestamp; showNotification(mensagem); } } }); }
+  function showNotification(message) { const existingToast = document.querySelector('.notification-toast'); if(existingToast) existingToast.remove(); const toast = document.createElement('div'); toast.className = 'notification-toast'; toast.innerHTML = `<div style="display: flex; justify-content: space-between;"><div><strong>📢 Nova Notificação</strong><div style="font-size: 0.85rem; margin-top: 5px;">${message}</div></div><button style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">×</button></div>`; toast.querySelector('button').addEventListener('click', () => toast.remove()); document.body.appendChild(toast); setTimeout(() => { if(toast.parentNode) toast.remove(); }, 8000); }
+
+  window.openAdminPanel = function() { const modal = document.getElementById('passwordModal'); modal.style.display = 'flex'; document.getElementById('adminPassword').value = ''; document.getElementById('errorMessage').style.display = 'none'; }
+  window.closePasswordModal = function() { document.getElementById('passwordModal').style.display = 'none'; }
+  window.verifyPassword = function() { const password = document.getElementById('adminPassword').value; if(password === 'admin') { closePasswordModal(); document.getElementById('adminPanel').classList.add('active'); updateAdminStats(); } else { document.getElementById('errorMessage').style.display = 'block'; document.getElementById('adminPassword').value = ''; } }
+  window.closeAdminPanel = function() { document.getElementById('adminPanel').classList.remove('active'); }
+  window.removeNotification = async function() { try { await setDoc(notificacaoRef, { mensagem: "", timestamp: serverTimestamp() }); alert('✅ Notificação removida!'); await updateAdminStats(); } catch(e) { alert('❌ Erro'); } }
+  async function updateAdminStats() { const snap = await getDoc(contadorRef); const totalVisitas = snap.exists() ? snap.data().total : 0; const cutoff = new Date(Date.now() - 40000); const q = query(onlinePresenceCollection, where("lastSeen", ">", cutoff)); const snapshot = await getDocs(q); const statsDiv = document.getElementById('adminStats'); if(statsDiv) statsDiv.innerHTML = `<p>📊 Total de Visitas: ${totalVisitas}</p><p>👥 Usuários Online: ${snapshot.size}</p><p>🆔 Sessão Atual: ${sessionId.substring(0,12)}</p>`; const usersDiv = document.getElementById('adminUsersOnline'); if(usersDiv) { const users = []; snapshot.forEach(doc => { users.push(`🟢 ${doc.data().sessionId.substring(0,12)}...`); }); usersDiv.innerHTML = users.length ? users.join('<br>') : '<p>Nenhum usuário online no momento</p>'; } }
+  window.sendGlobalNotification = async function() { const message = document.getElementById('notificationMessage').value.trim(); if(!message) { alert('Digite uma mensagem'); return; } try { await setDoc(notificacaoRef, { mensagem: message, timestamp: serverTimestamp() }); document.getElementById('notificationMessage').value = ''; alert('✅ Notificação enviada!'); await updateAdminStats(); } catch(e) { alert('❌ Erro ao enviar'); } }
+
+  window.showScreen = function(screenId) { 
+    ['homeScreen','materiaisScreen','atividadesScreen','carteirinhaScreen'].forEach(id => document.getElementById(id)?.classList.remove('active')); 
+    document.getElementById(screenId)?.classList.add('active'); 
+    document.querySelectorAll('.nav-item').forEach(btn => { btn.classList.remove('active'); if(btn.getAttribute('data-target') === screenId) btn.classList.add('active'); }); 
+  }
+
+  // Funções de tema
+  window.setTheme = function(theme) {
+    const body = document.body;
+    body.classList.remove('theme-default', 'theme-natal', 'theme-ano-novo', 'theme-pascoa');
+    body.classList.add(`theme-${theme}`);
+    localStorage.setItem('userTheme', theme);
+    closeThemeModal();
+    showToast(`🎨 Tema ${getThemeName(theme)} aplicado!`);
+  };
+  
+  function getThemeName(theme) {
+    const names = {
+      'default': 'Padrão',
+      'natal': 'Natal',
+      'ano-novo': 'Ano Novo',
+      'pascoa': 'Páscoa'
+    };
+    return names[theme] || 'Personalizado';
+  }
+  
+  function loadSavedTheme() {
+    const savedTheme = localStorage.getItem('userTheme');
+    if (savedTheme && savedTheme !== 'default') {
+      document.body.classList.add(`theme-${savedTheme}`);
+    }
+  }
+  
+  window.openThemeModal = function() {
+    document.getElementById('themeModal').classList.add('active');
+  };
+  
+  window.closeThemeModal = function() {
+    document.getElementById('themeModal').classList.remove('active');
+  };
+  
+  // Evento da engrenagem
+  document.getElementById('settingsGearBtn')?.addEventListener('click', openThemeModal);
+  
+  // Fechar modal ao clicar fora
+  document.getElementById('themeModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeThemeModal();
+  });
+
+  // MATERIAIS - Conteúdos fixos
+  function initSemesterMaterial() {
+    const tabs = document.querySelectorAll('.tab-sem');
+    const container = document.getElementById('materialsDynamicContainer');
+    if(!container) return;
+    
+    function updateMaterialContent(sem) {
+      if(sem === '1') {
+        container.innerHTML = `
+          <div class="activity-card clickable" style="border-left-color:#ec489a; margin-bottom:16px;cursor:pointer;" id="leiaSpMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" stroke="currentColor" fill="none"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" stroke="currentColor" fill="none"/></svg><span style="font-weight:800;">Leia SP</span><span id="leiaSpMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Biblioteca Digital</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Leia SP - Acervo Digital</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Milhares de livros, revistas e conteúdos gratuitos</div><div class="link-url">📚 leiasp.cupiditys.lol</div></div><div class="right-indicator">🔗 Acessar</div></div></div>
+          <div class="activity-card clickable" style="border-left-color:#d4af37; margin-bottom:16px;cursor:pointer;margin-top:8px;" id="leiaDoEgitaoMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2" stroke="currentColor" stroke-linecap="round"/><path d="M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">LEIA DO EGITAO</span><span id="leiaDoEgitaoMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Bookmarklet</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Leia do Egitao - Bookmarklet de Leitura</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o bookmarklet e automatizar leituras e quizzes</div><div class="link-url">📚 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+        `;
+        document.getElementById('leiaSpMaterialCard')?.addEventListener('click', openLeiaSpLink);
+        document.getElementById('leiaDoEgitaoMaterialCard')?.addEventListener('click', openLeiaDoEgitaoLink);
+      } else if(sem === '2') {
+        container.innerHTML = `
+          <div class="activity-card clickable" style="border-left-color:#f97316; margin-bottom:16px;cursor:pointer;" id="expansaoMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M12 12l2 2M12 12l-2 2M12 12l2-2M12 12l-2-2" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">Expansão Noturna</span><span id="expansaoNoturnaMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Conteúdo Exclusivo</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Expansão Noturna - Conteúdo Exclusivo</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Acesse materiais especiais e conteúdos noturnos</div><div class="link-url">🌙 exp.sev3ntzz.fun</div></div><div class="right-indicator">🔗 Explorar</div></div></div>
+          <div class="activity-card clickable" style="border-left-color:#f59e0b; margin-bottom:16px;cursor:pointer;margin-top:8px;" id="expansaoBookmarkletMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="2" y="3" width="20" height="18" rx="2" ry="2" stroke="currentColor" fill="none"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-linecap="round"/><line x1="8" y1="13" x2="12" y2="13" stroke="currentColor" stroke-linecap="round"/><line x1="4" y1="21" x2="20" y2="21" stroke="currentColor"/></svg><span style="font-weight:800;">EXPANSÃO BOOKMARKLET</span><span id="expansaoBookmarkletMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Automação</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Expansão Bookmarklet - Automação Híbrida</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o bookmarklet de automação da Expansão</div><div class="link-url">📋 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+        `;
+        document.getElementById('expansaoMaterialCard')?.addEventListener('click', openExpansaoNoturnaLink);
+        document.getElementById('expansaoBookmarkletMaterialCard')?.addEventListener('click', openExpansaoBookmarkletLink);
+      } else if(sem === '3') {
+        container.innerHTML = `
+          <div class="activity-card clickable" style="border-left-color:#3b82f6; margin-bottom:16px;cursor:pointer;" id="redacaoMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M16 4v16" stroke="currentColor" stroke-linecap="round"/><path d="M18 2v20" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">REDAÇÃO</span><span id="redacaoMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Correção Imediata</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Plataforma de Redação - Correção e Modelos</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Envie sua redação, receba correção e veja modelos nota 1000</div><div class="link-url">✍️ kazereda.nejizzuki.xyz</div></div><div class="right-indicator">🔗 Escrever redação</div></div></div>
+          <div class="activity-card clickable" style="border-left-color:#eab308; margin-bottom:16px;cursor:pointer;margin-top:8px;" id="redacaoParanaMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" fill="none"/><circle cx="12" cy="12" r="3" fill="#eab30820" stroke="#eab308"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">REDAÇÃO PARANÁ</span><span id="redacaoParanaMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Correção Oficial</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Redação Paraná - Plataforma de Correção</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Prepare-se para o vestibular com correções oficiais e modelos nota 1000</div><div class="link-url">✍️ paranaplataformas.crimsonzerohub.xyz</div></div><div class="right-indicator">🔗 Corrigir redação</div></div></div>
+          <div class="activity-card clickable" style="border-left-color:#a855f7; margin-bottom:16px;cursor:pointer;margin-top:8px;" id="redacaoIaMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M9 3v2M15 3v2M3 9h2M3 15h2M21 9h2M21 15h2M5 5l2 2M19 5l-2 2M5 19l2-2M19 19l-2-2" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" fill="none"/><path d="M12 16v4M8 20h8" stroke="currentColor" stroke-linecap="round"/></svg><span style="font-weight:800;">REDAÇÃO IA</span><span id="redacaoIaMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · IA Avançada</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Redação IA - Correção Inteligente</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Correção de redações com inteligência artificial, feedback instantâneo e dicas personalizadas</div><div class="link-url">🤖 infinity-writer.vercel.app</div></div><div class="right-indicator">🔗 Corrigir com IA</div></div></div>
+          <div class="activity-card clickable" style="border-left-color:#ef4444; margin-bottom:16px;cursor:pointer;margin-top:8px;" id="redacaoBookmarkletMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="2" y="3" width="20" height="18" rx="2" ry="2" stroke="currentColor" fill="none"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-linecap="round"/><line x1="8" y1="13" x2="12" y2="13" stroke="currentColor" stroke-linecap="round"/><line x1="4" y1="21" x2="20" y2="21" stroke="currentColor"/></svg><span style="font-weight:800;">REDAÇÃO BOOKMARKLET</span><span id="redacaoBookmarkletMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Bookmarklet</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Bookmarklet - Remover Bloqueios</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o bookmarklet que remove bloqueios de cópia, recorte e colagem</div><div class="link-url">📋 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+        `;
+        document.getElementById('redacaoMaterialCard')?.addEventListener('click', openRedacaoLink);
+        document.getElementById('redacaoParanaMaterialCard')?.addEventListener('click', openRedacaoParanaLink);
+        document.getElementById('redacaoIaMaterialCard')?.addEventListener('click', openRedacaoIaLink);
+        document.getElementById('redacaoBookmarkletMaterialCard')?.addEventListener('click', openRedacaoBookmarkletLink);
+      } else if(sem === '4') {
+        container.innerHTML = `
+          <div class="activity-card clickable" style="border-left-color:#14b8a6; margin-bottom:16px;cursor:pointer;" id="khanMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" fill="none"/><path d="M5 10.5v4.5l7 3.5 7-3.5v-4.5" stroke="currentColor" fill="none"/><circle cx="12" cy="12" r="2" fill="#14b8a620" stroke="#14b8a6"/></svg><span style="font-weight:800;">Khan Academy</span><span id="khanAcademyMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Cursos Gratuitos</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Khan Academy - Plataforma de Aprendizado</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Milhares de aulas gratuitas de matemática, ciências, programação e muito mais</div><div class="link-url">📚 khan.cupiditys.lol</div></div><div class="right-indicator">🔗 Estudar agora</div></div></div>
+          <div class="activity-card clickable" style="border-left-color:#f59e0b; margin-bottom:16px;cursor:pointer;margin-top:8px;" id="khanBookMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 6h16v12H4zM8 10h8M8 14h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M12 2v4M12 18v4" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#f59e0b20" stroke="#f59e0b"/></svg><span style="font-weight:800;">Khan Academy BOOK</span><span id="khanAcademyBookMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Bookmarklet</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Bookmarklet - Script Book</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Clique para copiar o código do bookmarklet e adicionar aos favoritos do seu navegador</div><div class="link-url">📖 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+        `;
+        document.getElementById('khanMaterialCard')?.addEventListener('click', openKhanAcademyLink);
+        document.getElementById('khanBookMaterialCard')?.addEventListener('click', openKhanAcademyBookLink);
+      } else if(sem === '5') {
+        container.innerHTML = `<div class="activity-card clickable" style="border-left-color:#06b6d4; margin-bottom:16px;cursor:pointer;" id="apostilasMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M16 4v16" stroke="currentColor" stroke-linecap="round"/><path d="M18 2v20" stroke="currentColor" stroke-width="1.5"/><path d="M2 2h2v20H2z" stroke="currentColor"/></svg><span style="font-weight:800;">APOSTILAS</span><span id="apostilasMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Material de Apoio</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Apostilas - Material de Estudo</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Apostilas completas para seus estudos, materiais de apoio e muito mais</div><div class="link-url">📖 apostilas.nejizzuki.xyz</div></div><div class="right-indicator">🔗 Acessar</div></div></div>`;
+        document.getElementById('apostilasMaterialCard')?.addEventListener('click', openApostilasLink);
+      } else if(sem === '7') {
+        container.innerHTML = `
+          <div class="activity-card clickable" style="border-left-color:#10b981; margin-bottom:16px;cursor:pointer;" id="taskitosMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg><span style="font-weight:800;">Taskitos</span><span id="taskitosMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Gamificação</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Taskitos - Central de Tarefas Gamificadas</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Plataforma interativa com missões, rankings e conquistas para tornar o aprendizado mais divertido</div><div class="link-url">🎮 taskitos.cupiditys.lol</div></div><div class="right-indicator">🔗 Acessar</div></div></div>
+        `;
+        document.getElementById('taskitosMaterialCard')?.addEventListener('click', openTaskitosLink);
+      } else if(sem === '8') {
+        container.innerHTML = `
+          <div class="activity-card clickable" style="border-left-color:#8b5cf6; margin-bottom:16px;cursor:pointer;" id="eclipseLunarMaterialCard"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M12 12l2 2M12 12l-2 2M12 12l2-2M12 12l-2-2" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h2M20 12h2" stroke="currentColor"/></svg><span style="font-weight:800;">Eclipse Lunar</span><span id="eclipseLunarMaterialStatus" class="badge badge-online" style="margin-left:6px;">🟢 Online · Conteúdo Noturno</span></div><div style="margin-top:12px; font-weight:600; font-size:1rem;">Eclipse Lunar - Hub de Conteúdos Exclusivos</div><div style="font-size:0.75rem; color:#475569; margin-top:6px;">Acesse conteúdos exclusivos, jogos, materiais interativos e muito mais em um ambiente noturno único</div><div class="link-url">🌙 crimsonzerohub.xyz</div></div><div class="right-indicator">🔗 Explorar</div></div></div>
+        `;
+        document.getElementById('eclipseLunarMaterialCard')?.addEventListener('click', openEclipseLunarLink);
+      } else {
+        container.innerHTML = `<div style="text-align:center; padding:40px 20px; background:white; border-radius:28px; color:#64748b;"><span style="font-size:3rem;">📚</span><h3 style="margin-top:12px;">Nenhum conteúdo disponível</h3><p style="margin-top:8px;">Este semestre ainda não possui materiais cadastrados.</p></div>`;
+      }
+      applyStatusToMaterialCards(currentStatusData);
+    }
+    
+    tabs.forEach(tab => tab.addEventListener('click', function() { tabs.forEach(t => t.classList.remove('active')); this.classList.add('active'); updateMaterialContent(this.getAttribute('data-sem')); }));
+    updateMaterialContent('1');
+  }
+
+  function bindAllCards() {
+    const cardHandlers = [
+      ['taskitosSpecialCard', 'taskitosLinkTrigger', openTaskitosLink],
+      ['eclipseLunarCard', 'eclipseLunarLinkTrigger', openEclipseLunarLink],
+      ['educacaoProfissionalCard', 'educacaoLinkTrigger', openEducacaoLink],
+      ['matificCard', 'matificLinkTrigger', openMatificLink],
+      ['openEnglishCard', 'openEnglishLinkTrigger', openOpenEnglishLink],
+      ['leiaSpCard', 'leiaSpLinkTrigger', openLeiaSpLink],
+      ['leiaDoEgitaoCard', 'leiaDoEgitaoLinkTrigger', openLeiaDoEgitaoLink],
+      ['expansaoNoturnaCard', 'expansaoNoturnaLinkTrigger', openExpansaoNoturnaLink],
+      ['expansaoBookmarkletCard', 'expansaoBookmarkletLinkTrigger', openExpansaoBookmarkletLink],
+      ['redacaoCard', 'redacaoLinkTrigger', openRedacaoLink],
+      ['redacaoParanaCard', 'redacaoParanaLinkTrigger', openRedacaoParanaLink],
+      ['redacaoIaCard', 'redacaoIalinkTrigger', openRedacaoIaLink],
+      ['redacaoBookmarkletCard', 'redacaoBookmarkletLinkTrigger', openRedacaoBookmarkletLink],
+      ['khanAcademyCard', 'khanAcademyLinkTrigger', openKhanAcademyLink],
+      ['khanAcademyBookCard', 'khanAcademyBookLinkTrigger', openKhanAcademyBookLink],
+      ['apostilasCard', 'apostilasLinkTrigger', openApostilasLink]
+    ];
+    for (const [cardId, triggerId, handler] of cardHandlers) {
+      const card = document.getElementById(cardId);
+      if(card) { card.addEventListener('click', handler); card.style.cursor = 'pointer'; }
+      const trigger = document.getElementById(triggerId);
+      if(trigger) trigger.addEventListener('click', (e) => { e.stopPropagation(); handler(e); });
+    }
+    document.getElementById('adminPanelCard')?.addEventListener('click', () => window.openAdminPanel());
+    document.getElementById('chatGptPill')?.addEventListener('click', openChatGPTLink);
+    document.getElementById('geminiPill')?.addEventListener('click', openGeminiLink);
+    document.getElementById('grokPill')?.addEventListener('click', openGrokLink);
+    document.getElementById('pokiPill')?.addEventListener('click', openPokiLink);
+  }
+
+  function setupNavigation() { 
+    document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => window.showScreen(btn.getAttribute('data-target')))); 
+    document.getElementById('avatarDashBtn')?.addEventListener('click', () => window.showScreen('carteirinhaScreen'));
+  }
+  
+  function setupSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    const container = document.getElementById('searchableItemsContainer');
+    if (!searchInput || !container) return;
+    function filterItems() {
+      const term = searchInput.value.trim().toLowerCase();
+      const items = container.querySelectorAll('.activity-card');
+      const dynamicItems = document.querySelectorAll('#dynamicCardsAtividadesContainer .activity-card');
+      let hasVisible = false;
+      items.forEach(card => { const textContent = card.innerText.toLowerCase(); if (term === '' || textContent.includes(term)) { card.style.display = ''; hasVisible = true; } else { card.style.display = 'none'; } });
+      dynamicItems.forEach(card => { const textContent = card.innerText.toLowerCase(); if (term === '' || textContent.includes(term)) { card.style.display = ''; hasVisible = true; } else { card.style.display = 'none'; } });
+      const existingMsg = document.getElementById('noSearchResultsMsg');
+      if (existingMsg) existingMsg.remove();
+      if (!hasVisible && term !== '') { const noResultsDiv = document.createElement('div'); noResultsDiv.id = 'noSearchResultsMsg'; noResultsDiv.className = 'no-results'; noResultsDiv.innerHTML = `🔍 Nenhum resultado encontrado para "<strong>${term}</strong>"`; container.appendChild(noResultsDiv); }
+      if (clearBtn) clearBtn.style.display = term === '' ? 'none' : 'flex';
+    }
+    searchInput.addEventListener('input', filterItems);
+    if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; filterItems(); searchInput.focus(); });
+  }
+
+  function startActivityClock() { 
+    const clockElem = document.getElementById('liveClockAtv'); 
+    const dateElem = document.getElementById('liveDateAtv'); 
+    const greetingElem = document.getElementById('greetingAtv'); 
+    function updateClock() { 
+      const now = new Date(); 
+      if(clockElem) clockElem.innerText = now.toLocaleTimeString('pt-BR');
+      if(dateElem) dateElem.innerText = now.toLocaleDateString('pt-BR');
+      const hour = now.getHours(); 
+      let greeting = hour < 12 ? "🌅 Bom dia! Aproveite seus estudos" : (hour < 18 ? "☀️ Boa tarde! Continue focado" : "🌙 Boa noite! Hora de revisar"); 
+      if(greetingElem) greetingElem.innerText = greeting + " ✨"; 
+    } 
+    updateClock(); 
+    setInterval(updateClock, 1000); 
+  }
+
+  function setupColorPreview() {
+    const colorPreview = document.getElementById('cardColorPreview');
+    if (colorPreview) { colorPreview.addEventListener('click', () => { colorPreview.style.backgroundColor = randomColor(); }); }
+  }
+
+  function populateAtividades() {
+    const container = document.getElementById('searchableItemsContainer');
+    if(!container) return;
+    container.innerHTML = `
+      <div class="activity-card clickable" style="border-left-color:#10b981; margin-bottom:20px;" id="taskitosAtividadesCard"><div class="platform-link" id="taskitosLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg><span style="font-weight:800;">Taskitos</span><span id="taskitosStatus2" class="badge badge-online" style="margin-left:6px;">Ao vivo</span></div><div style="margin-top:10px; font-weight:600;">Plataforma de Missões e Gamificação</div><div style="font-size:0.7rem; color:#2d3a5e;">Acesse agora e ganhe conquistas</div><div class="link-url">🔗 taskitos.cupiditys.lol</div></div><div class="right-indicator">🔗 Abrir</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#8b5cf6; margin-bottom:20px;" id="eclipseLunarAtividadesCard"><div class="platform-link" id="eclipseLunarLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M12 12l2 2M12 12l-2 2M12 12l2-2M12 12l-2-2" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h2M20 12h2" stroke="currentColor"/></svg><span style="font-weight:800;">Eclipse Lunar</span><span id="eclipseLunarStatus2" class="badge badge-online" style="margin-left:6px;">Online · Conteúdo Noturno</span></div><div style="margin-top:10px; font-weight:600;">Eclipse Lunar - Hub de Conteúdos</div><div style="font-size:0.7rem; color:#2d3a5e;">Acesse conteúdos exclusivos, jogos e materiais interativos</div><div class="link-url">🌙 crimsonzerohub.xyz</div></div><div class="right-indicator">🔗 Explorar agora</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#8b5cf6; margin-bottom:20px;" id="educacaoAtividadesCard"><div class="platform-link" id="educacaoLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/><path d="M5 10.5v4.5l7 3.5 7-3.5v-4.5"/></svg><span style="font-weight:800;">Educação Profissional</span><span id="educacaoStatus2" class="badge badge-online" style="margin-left:6px;">Disponível 24h</span></div><div style="margin-top:10px; font-weight:600;">Cursos, Carreira e Networking</div><div style="font-size:0.7rem; color:#2d3a5e;">Capacitação com foco no mercado</div><div class="link-url">🔗 profissional.nejizzuki.xyz</div></div><div class="right-indicator">🔗 Acessar agora</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#f59e0b; margin-bottom:20px;" id="matificAtividadesCard"><div class="platform-link" id="matificLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v3a4 4 0 0 0 8 0V3" stroke="currentColor" fill="none"/><path d="M12 12v7" stroke="currentColor"/><path d="M18 10c0 3.314-2.686 6-6 6s-6-2.686-6-6" stroke="currentColor" fill="none"/><circle cx="12" cy="9" r="2" fill="#f59e0b20" stroke="#f59e0b"/><path d="M4 21h16" stroke="currentColor"/></svg><span style="font-weight:800;">Matific</span><span id="matificStatus2" class="badge badge-online" style="margin-left:6px;">Disponível</span></div><div style="margin-top:10px; font-weight:600;">Aprendizado Adaptativo em Matemática</div><div style="font-size:0.7rem; color:#2d3a5e;">Exercícios interativos e relatórios</div><div class="link-url">🔗 matific.cupiditys.lol/dashboard</div></div><div class="right-indicator">🔗 Ir para o dashboard</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#06b6d4; margin-bottom:20px;" id="openEnglishAtividadesCard"><div class="platform-link" id="openEnglishLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14M5 12h10M5 16h6" stroke="currentColor" stroke-linecap="round"/><circle cx="18" cy="16" r="3" stroke="currentColor" fill="none"/><path d="M21 19l-2-2" stroke="currentColor" stroke-linecap="round"/><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" fill="none"/></svg><span style="font-weight:800;">Open English</span><span id="openEnglishStatus2" class="badge badge-online" style="margin-left:6px;">Online 24/7</span></div><div style="margin-top:10px; font-weight:600;">Inglês para sua Carreira</div><div style="font-size:0.7rem; color:#2d3a5e;">Aulas interativas com professores nativos</div><div class="link-url">🔗 oe.nejizzuki.xyz</div></div><div class="right-indicator">🔗 Iniciar agora</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#ec489a; margin-bottom:20px;" id="leiaSpAtividadesCard"><div class="platform-link" id="leiaSpLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" stroke="currentColor" fill="none"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" stroke="currentColor" fill="none"/></svg><span style="font-weight:800;">Leia SP</span><span id="leiaSpStatus2" class="badge badge-online" style="margin-left:6px;">Online · Acervo Digital</span></div><div style="margin-top:10px; font-weight:600;">Leia SP - Biblioteca Virtual</div><div style="font-size:0.7rem; color:#2d3a5e;">Milhares de títulos gratuitos para estudantes</div><div class="link-url">🔗 leiasp.cupiditys.lol</div></div><div class="right-indicator">🔗 Explorar acervo</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#d4af37; margin-bottom:20px;" id="leiaDoEgitaoAtividadesCard"><div class="platform-link" id="leiaDoEgitaoLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2" stroke="currentColor" stroke-linecap="round"/><path d="M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">LEIA DO EGITAO</span><span id="leiaDoEgitaoStatus2" class="badge badge-online" style="margin-left:6px;">Online · Bookmarklet</span></div><div style="margin-top:10px; font-weight:600;">Leia do Egitao - Bookmarklet de Leitura</div><div style="font-size:0.7rem; color:#2d3a5e;">Clique para copiar o bookmarklet e automatizar leituras</div><div class="link-url">📚 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#f97316; margin-bottom:20px;" id="expansaoNoturnaAtividadesCard"><div class="platform-link" id="expansaoNoturnaLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v2M12 20v2M4 12H2M6 6L4 4M18 6l2-2M18 18l2 2M6 18L4 20M20 12h2M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" fill="none"/><path d="M12 12l2 2M12 12l-2 2M12 12l2-2M12 12l-2-2" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">Expansão Noturna</span><span id="expansaoNoturnaStatus2" class="badge badge-online" style="margin-left:6px;">Online · Conteúdo Exclusivo</span></div><div style="margin-top:10px; font-weight:600;">Expansão Noturna - Materiais Especiais</div><div style="font-size:0.7rem; color:#2d3a5e;">Acesse conteúdos noturnos exclusivos</div><div class="link-url">🌙 exp.sev3ntzz.fun</div></div><div class="right-indicator">🔗 Explorar agora</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#f59e0b; margin-bottom:20px;" id="expansaoBookmarkletAtividadesCard"><div class="platform-link" id="expansaoBookmarkletLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="2" ry="2" stroke="currentColor" fill="none"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-linecap="round"/><line x1="8" y1="13" x2="12" y2="13" stroke="currentColor" stroke-linecap="round"/><line x1="4" y1="21" x2="20" y2="21" stroke="currentColor"/></svg><span style="font-weight:800;">EXPANSÃO BOOKMARKLET</span><span id="expansaoBookmarkletStatus2" class="badge badge-online" style="margin-left:6px;">Online · Automação</span></div><div style="margin-top:10px; font-weight:600;">Expansão Bookmarklet - Automação Híbrida</div><div style="font-size:0.7rem; color:#2d3a5e;">Clique para copiar o bookmarklet de automação da Expansão</div><div class="link-url">📋 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#3b82f6; margin-bottom:20px;" id="redacaoAtividadesCard"><div class="platform-link" id="redacaoLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M16 4v16" stroke="currentColor" stroke-linecap="round"/><path d="M18 2v20" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">REDAÇÃO</span><span id="redacaoStatus2" class="badge badge-online" style="margin-left:6px;">Online · Correção Nota 1000</span></div><div style="margin-top:10px; font-weight:600;">Plataforma de Redação - Correção e Modelos</div><div style="font-size:0.7rem; color:#2d3a5e;">Envie sua redação e receba correção imediata</div><div class="link-url">✍️ kazereda.nejizzuki.xyz</div></div><div class="right-indicator">🔗 Escrever redação</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#eab308; margin-bottom:20px;" id="redacaoParanaAtividadesCard"><div class="platform-link" id="redacaoParanaLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" fill="none"/><circle cx="12" cy="12" r="3" fill="#eab30820" stroke="#eab308"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5"/></svg><span style="font-weight:800;">REDAÇÃO PARANÁ</span><span id="redacaoParanaStatus2" class="badge badge-online" style="margin-left:6px;">Online · Correção Oficial</span></div><div style="margin-top:10px; font-weight:600;">Redação Paraná - Plataforma de Correção</div><div style="font-size:0.7rem; color:#2d3a5e;">Prepare-se para o vestibular com correções oficiais</div><div class="link-url">✍️ paranaplataformas.crimsonzerohub.xyz</div></div><div class="right-indicator">🔗 Corrigir redação</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#a855f7; margin-bottom:20px;" id="redacaoIaAtividadesCard"><div class="platform-link" id="redacaoIalinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3v2M15 3v2M3 9h2M3 15h2M21 9h2M21 15h2M5 5l2 2M19 5l-2 2M5 19l2-2M19 19l-2-2" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" fill="none"/><path d="M12 16v4M8 20h8" stroke="currentColor" stroke-linecap="round"/></svg><span style="font-weight:800;">REDAÇÃO IA</span><span id="redacaoIaStatus2" class="badge badge-online" style="margin-left:6px;">Online · IA Avançada</span></div><div style="margin-top:10px; font-weight:600;">Redação IA - Correção Inteligente</div><div style="font-size:0.7rem; color:#2d3a5e;">Correção de redações com inteligência artificial</div><div class="link-url">🤖 infinity-writer.vercel.app</div></div><div class="right-indicator">🔗 Corrigir com IA</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#ef4444; margin-bottom:20px;" id="redacaoBookmarkletAtividadesCard"><div class="platform-link" id="redacaoBookmarkletLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="2" ry="2" stroke="currentColor" fill="none"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-linecap="round"/><line x1="8" y1="13" x2="12" y2="13" stroke="currentColor" stroke-linecap="round"/><line x1="4" y1="21" x2="20" y2="21" stroke="currentColor"/></svg><span style="font-weight:800;">REDAÇÃO BOOKMARKLET</span><span id="redacaoBookmarkletStatus2" class="badge badge-online" style="margin-left:6px;">Online · Bookmarklet</span></div><div style="margin-top:10px; font-weight:600;">Bookmarklet - Remover Bloqueios</div><div style="font-size:0.7rem; color:#2d3a5e;">Clique para copiar o bookmarklet que remove bloqueios de cópia</div><div class="link-url">📋 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#14b8a6; margin-bottom:20px;" id="khanAcademyAtividadesCard"><div class="platform-link" id="khanAcademyLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" fill="none"/><path d="M5 10.5v4.5l7 3.5 7-3.5v-4.5" stroke="currentColor" fill="none"/><circle cx="12" cy="12" r="2" fill="#14b8a620" stroke="#14b8a6"/></svg><span style="font-weight:800;">Khan Academy</span><span id="khanAcademyStatus2" class="badge badge-online" style="margin-left:6px;">Online · Cursos Gratuitos</span></div><div style="margin-top:10px; font-weight:600;">Khan Academy - Plataforma de Aprendizado</div><div style="font-size:0.7rem; color:#2d3a5e;">Aulas gratuitas de matemática, ciências e muito mais</div><div class="link-url">📚 khan.cupiditys.lol</div></div><div class="right-indicator">🔗 Estudar agora</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#f59e0b; margin-bottom:20px;" id="khanAcademyBookAtividadesCard"><div class="platform-link" id="khanAcademyBookLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16v12H4zM8 10h8M8 14h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M12 2v4M12 18v4" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#f59e0b20" stroke="#f59e0b"/></svg><span style="font-weight:800;">Khan Academy BOOK</span><span id="khanAcademyBookStatus2" class="badge badge-online" style="margin-left:6px;">Online · Bookmarklet</span></div><div style="margin-top:10px; font-weight:600;">Bookmarklet - Script Book</div><div style="font-size:0.7rem; color:#2d3a5e;">Clique para copiar o código do bookmarklet</div><div class="link-url">📖 Clique para copiar o código</div></div><div class="right-indicator">📋 Copiar</div></div></div>
+      <div class="activity-card clickable" style="border-left-color:#06b6d4; margin-bottom:20px;" id="apostilasAtividadesCard"><div class="platform-link" id="apostilasLinkTrigger2"><div style="flex:1"><div class="platform-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4" stroke="currentColor" fill="none" stroke-linecap="round"/><path d="M16 4v16" stroke="currentColor" stroke-linecap="round"/><path d="M18 2v20" stroke="currentColor" stroke-width="1.5"/><path d="M2 2h2v20H2z" stroke="currentColor"/></svg><span style="font-weight:800;">APOSTILAS</span><span id="apostilasStatus2" class="badge badge-online" style="margin-left:6px;">Online · Material de Apoio</span></div><div style="margin-top:10px; font-weight:600;">Apostilas - Material de Estudo</div><div style="font-size:0.7rem; color:#2d3a5e;">Apostilas completas para seus estudos</div><div class="link-url">📖 apostilas.nejizzuki.xyz</div></div><div class="right-indicator">🔗 Acessar</div></div></div>
+    `;
+    document.getElementById('taskitosLinkTrigger2')?.addEventListener('click', openTaskitosLink);
+    document.getElementById('eclipseLunarLinkTrigger2')?.addEventListener('click', openEclipseLunarLink);
+    document.getElementById('educacaoLinkTrigger2')?.addEventListener('click', openEducacaoLink);
+    document.getElementById('matificLinkTrigger2')?.addEventListener('click', openMatificLink);
+    document.getElementById('openEnglishLinkTrigger2')?.addEventListener('click', openOpenEnglishLink);
+    document.getElementById('leiaSpLinkTrigger2')?.addEventListener('click', openLeiaSpLink);
+    document.getElementById('leiaDoEgitaoLinkTrigger2')?.addEventListener('click', openLeiaDoEgitaoLink);
+    document.getElementById('expansaoNoturnaLinkTrigger2')?.addEventListener('click', openExpansaoNoturnaLink);
+    document.getElementById('expansaoBookmarkletLinkTrigger2')?.addEventListener('click', openExpansaoBookmarkletLink);
+    document.getElementById('redacaoLinkTrigger2')?.addEventListener('click', openRedacaoLink);
+    document.getElementById('redacaoParanaLinkTrigger2')?.addEventListener('click', openRedacaoParanaLink);
+    document.getElementById('redacaoIalinkTrigger2')?.addEventListener('click', openRedacaoIaLink);
+    document.getElementById('redacaoBookmarkletLinkTrigger2')?.addEventListener('click', openRedacaoBookmarkletLink);
+    document.getElementById('khanAcademyLinkTrigger2')?.addEventListener('click', openKhanAcademyLink);
+    document.getElementById('khanAcademyBookLinkTrigger2')?.addEventListener('click', openKhanAcademyBookLink);
+    document.getElementById('apostilasLinkTrigger2')?.addEventListener('click', openApostilasLink);
+  }
+
+  async function initApp() {
+    startActivityClock();
+    initSemesterMaterial();
+    setupNavigation();
+    bindAllCards();
+    setupSearch();
+    setupColorPreview();
+    populateAtividades();
+    loadSavedTheme();
+    await incrementarVisitas();
+    monitorarVisitas();
+    monitorarUsuariosOnline();
+    monitorarNotificacoes();
+    monitorarPlataformasStatus();
+    monitorDynamicCards();
+    if (!document.getElementById('homeScreen').classList.contains('active')) window.showScreen('homeScreen');
+  }
+  initApp();
+</script>
+</body>
+</html>
